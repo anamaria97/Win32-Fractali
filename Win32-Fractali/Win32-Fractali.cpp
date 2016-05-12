@@ -1,8 +1,10 @@
 // Win32-Fractali.cpp : Defines the entry point for the application.
 //
 
+
 #include "stdafx.h"
 #include "Win32-Fractali.h"
+
 
 #define MAX_LOADSTRING 100
 
@@ -10,6 +12,17 @@
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
+CHOOSECOLORW  colorPick;
+COLORREF acrCustClr[16]; // array of custom colors
+HWND BackColor;
+HWND LineColor;
+HWND WidthLine;
+HWND MinDist;
+HWND Speed;
+HWND Square;
+HWND Triangle;
+HWND Hexagon;
+
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -125,6 +138,33 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+	case WM_CREATE:
+	{// Initialize CHOOSECOLOR
+		ZeroMemory(&colorPick, sizeof(CHOOSECOLOR));
+		colorPick.lStructSize = sizeof(CHOOSECOLOR);
+		colorPick.hwndOwner = hWnd;
+		colorPick.lpCustColors = (LPDWORD)acrCustClr;
+		colorPick.Flags = CC_FULLOPEN | CC_RGBINIT;
+		// creaza butoanele si controlerele
+		BackColor = CreateWindowEx(0, L"BUTTON", L"Background color", WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,
+			10, 10, 140, 24, hWnd, NULL, NULL, NULL);
+		LineColor = CreateWindowEx(0, L"BUTTON", L"Line color", WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,
+			10, 35, 140, 24, hWnd, NULL, NULL, NULL);
+		Square = CreateWindowEx(0, L"BUTTON", L"Patrat", WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,
+			10, 190, 140, 24, hWnd, NULL, NULL, NULL);
+		Triangle = CreateWindowEx(0, L"BUTTON", L"Triunghi", WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,
+			160, 190, 140, 24, hWnd, NULL, NULL, NULL);
+		Hexagon = CreateWindowEx(0, L"BUTTON", L"Hexagon", WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,
+			310, 190, 140, 24, hWnd, NULL, NULL, NULL);
+		WidthLine = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_CHILD | WS_VISIBLE | ES_LEFT | ES_NUMBER,
+			110, 60, 40, 20, hWnd, NULL, NULL, NULL);
+		MinDist = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_CHILD | WS_VISIBLE | ES_LEFT | ES_NUMBER,
+			110, 85, 40, 20, hWnd, NULL, NULL, NULL);
+		Speed = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_CHILD | WS_VISIBLE | ES_LEFT | ES_NUMBER,
+			110, 110, 40, 20, hWnd, NULL, NULL, NULL);
+	}
+	break;
+	
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
@@ -147,6 +187,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
             // TODO: Add any drawing code that uses hdc here...
+		TextOut(hdc, 10, 60, L"Latime Linie:", 13);
+		TextOut(hdc, 10, 85, L"Minim:",6);
+		TextOut(hdc, 10, 110, L"Viteza:", 7);
             EndPaint(hWnd, &ps);
         }
         break;
