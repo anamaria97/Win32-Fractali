@@ -36,6 +36,8 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
+INT_PTR CALLBACK    Start(HWND, UINT, WPARAM, LPARAM);
+
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -197,8 +199,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				if (square == (HWND)lParam)
 				{
-					HDC hdc = GetDC(hWnd);
-					draw(hdc);
+					HWND stDiag = CreateDialog(hInst, MAKEINTRESOURCE(IDD_START), hWnd, (DLGPROC)Start);
+	
+					HDC hdc = GetDC(stDiag);
+					ShowWindow(stDiag, SW_SHOW);
+					
 				}
 			}
 				break;
@@ -249,9 +254,46 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             return (INT_PTR)TRUE;
         }
         break;
+	case WM_PAINT:
+	{
+		PAINTSTRUCT ps;
+		HDC hdc = BeginPaint(hDlg, &ps);
+		// TODO: Add any drawing code that uses hdc here...
+		draw(hdc);
+		EndPaint(hDlg, &ps);
+	}
+	break;
     }
     return (INT_PTR)FALSE;
 }
 
+
+INT_PTR CALLBACK Start(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(lParam);
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		return (INT_PTR)TRUE;
+
+	case WM_COMMAND:
+		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
+		{
+			EndDialog(hDlg, LOWORD(wParam));
+			return (INT_PTR)TRUE;
+		}
+		break;
+	case WM_PAINT:
+	{
+		PAINTSTRUCT ps;
+		HDC hdc = BeginPaint(hDlg, &ps);
+		// TODO: Add any drawing code that uses hdc here...
+		draw(hdc);
+		EndPaint(hDlg, &ps);
+	}
+	break;
+	}
+	return (INT_PTR)FALSE;
+}
 
 
