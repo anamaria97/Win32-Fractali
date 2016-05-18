@@ -259,7 +259,6 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hDlg, &ps);
 		// TODO: Add any drawing code that uses hdc here...
-		draw(hdc);
 		EndPaint(hDlg, &ps);
 	}
 	break;
