@@ -195,6 +195,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						lineColor = colorPick.rgbResult;
 					}
 				}
+				if (square == (HWND)lParam)
+				{
+					HDC hdc = GetDC(hWnd);
+					draw(hdc);
+				}
 			}
 				break;
             case IDM_ABOUT:
