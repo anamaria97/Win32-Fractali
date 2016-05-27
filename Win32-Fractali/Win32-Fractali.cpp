@@ -21,9 +21,10 @@ HWND chWidthLine;
 HWND chMinDist;
 HWND chSpeed;
 HWND square;
+HWND circle;
 HWND triangle;
 HWND hexagon;
-
+int option;
 
 CHOOSECOLOR  colorPick;
 COLORREF acrCustClr[16]; // array of custom colors
@@ -156,11 +157,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		chLineColor = CreateWindowEx(0, L"BUTTON", L"Line color", WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,
 			10, 35, 150, 24, hWnd, NULL, NULL, NULL);
 		square = CreateWindowEx(0, L"BUTTON", L"Patrat", WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,
-			200, 10, 150, 24, hWnd, NULL, NULL, NULL);
-		triangle = CreateWindowEx(0, L"BUTTON", L"Triunghi", WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,
-			200, 55, 150, 24, hWnd, NULL, NULL, NULL);
+			200, 15, 150, 24, hWnd, NULL, NULL, NULL);
+		circle = CreateWindowEx(0, L"BUTTON", L"Cerc", WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,
+			200, 45, 150, 24, hWnd, NULL, NULL, NULL);
 		hexagon = CreateWindowEx(0, L"BUTTON", L"Hexagon", WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,
-			200, 100, 150, 24, hWnd, NULL, NULL, NULL);
+			200, 75, 150, 24, hWnd, NULL, NULL, NULL);
+		triangle = CreateWindowEx(0, L"BUTTON", L"Triunghi", WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,
+			200,105,150,24,hWnd,NULL,NULL,NULL);
 		chWidthLine = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_CHILD | WS_VISIBLE | ES_LEFT | ES_NUMBER,
 			110, 60, 40, 20, hWnd, NULL, NULL, NULL);
 		chMinDist = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_CHILD | WS_VISIBLE | ES_LEFT | ES_NUMBER,
@@ -200,10 +203,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				if (square == (HWND)lParam)
 				{
 					HWND stDiag = CreateDialog(hInst, MAKEINTRESOURCE(IDD_START), hWnd, (DLGPROC)Start);
-	
 					HDC hdc = GetDC(stDiag);
+					option = PATRAT;
 					ShowWindow(stDiag, SW_SHOW);
 					
+				}
+				if (circle == (HWND)lParam)
+				{
+					HWND stDiag = CreateDialog(hInst, MAKEINTRESOURCE(IDD_START), hWnd, (DLGPROC)Start);
+					HDC hdc = GetDC(stDiag);
+					option = CERC;
+					ShowWindow(stDiag, SW_SHOW);
+
 				}
 			}
 				break;
@@ -287,8 +298,9 @@ INT_PTR CALLBACK Start(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hDlg, &ps);
 		// TODO: Add any drawing code that uses hdc here...
-		//draw(hdc,100,100,200,5);
-		circle(hdc,0,0,500,20);
+		//square(hdc,100,100,200,5);
+		//circle(hdc,0,0,500,10);
+		Draw(hdc,option);
 		EndPaint(hDlg, &ps);
 	}
 	break;
