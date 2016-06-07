@@ -216,6 +216,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					ShowWindow(stDiag, SW_SHOW);
 
 				}
+				if (triangle == (HWND)lParam)
+				{
+					HWND stDiag = CreateDialog(hInst, MAKEINTRESOURCE(IDD_START), hWnd, (DLGPROC)Start);
+					HDC hdc = GetDC(stDiag);
+					option =TRIUNGHI;
+					ShowWindow(stDiag, SW_SHOW);
+
+				}
 			}
 				break;
             case IDM_ABOUT:
@@ -292,7 +300,9 @@ INT_PTR CALLBACK Start(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 			EndDialog(hDlg, LOWORD(wParam));
 			return (INT_PTR)TRUE;
 		}
+	
 		break;
+	break;
 	case WM_PAINT:
 	{
 		PAINTSTRUCT ps;
