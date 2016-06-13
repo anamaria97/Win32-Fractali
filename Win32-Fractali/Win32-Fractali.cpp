@@ -222,8 +222,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					HDC hdc = GetDC(stDiag);
 					option =TRIUNGHI;
 					ShowWindow(stDiag, SW_SHOW);
-
 				}
+				if (hexagon == (HWND)lParam)
+				{
+					HWND stDiag = CreateDialog(hInst, MAKEINTRESOURCE(IDD_START), hWnd, (DLGPROC)Start);
+					HDC hdc = GetDC(stDiag);
+					option = HEXAGON;
+					ShowWindow(stDiag, SW_SHOW);
+				}
+					
 			}
 				break;
             case IDM_ABOUT:
