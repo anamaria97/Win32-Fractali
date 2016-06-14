@@ -12,13 +12,12 @@
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
-
+int speed,lineWidth;
 
 
 HWND chBackColor;
 HWND chLineColor;
 HWND chWidthLine;
-HWND chMinDist;
 HWND chSpeed;
 HWND square;
 HWND circle;
@@ -28,8 +27,8 @@ int option;
 
 CHOOSECOLOR  colorPick;
 COLORREF acrCustClr[16]; // array of custom colors
-COLORREF backColor;
-COLORREF lineColor;
+COLORREF backColor=RGB(255,255,255);
+COLORREF lineColor=RGB(0,0,0);
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -166,10 +165,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			200,105,150,24,hWnd,NULL,NULL,NULL);
 		chWidthLine = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_CHILD | WS_VISIBLE | ES_LEFT | ES_NUMBER,
 			110, 60, 40, 20, hWnd, NULL, NULL, NULL);
-		chMinDist = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_CHILD | WS_VISIBLE | ES_LEFT | ES_NUMBER,
-			110, 85, 40, 20, hWnd, NULL, NULL, NULL);
 		chSpeed = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_CHILD | WS_VISIBLE | ES_LEFT | ES_NUMBER,
-			110, 110, 40, 20, hWnd, NULL, NULL, NULL);
+			110, 85, 40, 20, hWnd, NULL, NULL, NULL);
 
 		// Initialize CHOOSECOLOR
 		ZeroMemory(&colorPick, sizeof(CHOOSECOLOR));
@@ -202,6 +199,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				if (square == (HWND)lParam)
 				{
+					//int speed;
+					WCHAR sir[10];
+					GetWindowText(chSpeed, sir, 10);
+					speed = _wtoi(sir);
+					if (speed > 10)
+					{
+						MessageBox(NULL, L"Viteza introdusa gresit. Incercati valori din intervalul 1-10", L"eroare", MB_ICONERROR);
+						speed = 0;
+						break;
+					}
+
+
+					GetWindowText(chWidthLine, sir, 10);
+					lineWidth = _wtoi(sir);
+					if (lineWidth > 10)
+					{
+						MessageBox(NULL, L"Latime introdusa gresit. Incercati valori din intervalul 1-10", L"eroare", MB_ICONERROR);
+						lineWidth = 1;
+						break;
+					}
 					HWND stDiag = CreateDialog(hInst, MAKEINTRESOURCE(IDD_START), hWnd, (DLGPROC)Start);
 					HDC hdc = GetDC(stDiag);
 					option = PATRAT;
@@ -210,6 +227,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				if (circle == (HWND)lParam)
 				{
+					WCHAR sir[10];
+					GetWindowText(chSpeed, sir, 10);
+					speed = _wtoi(sir);
+					if (speed > 10)
+					{
+						MessageBox(NULL, L"Viteza introdusa gresit. Incercati valori din intervalul 1-10", L"eroare", MB_ICONERROR);
+						speed = 0;
+						break;
+					}
+
 					HWND stDiag = CreateDialog(hInst, MAKEINTRESOURCE(IDD_START), hWnd, (DLGPROC)Start);
 					HDC hdc = GetDC(stDiag);
 					option = CERC;
@@ -218,6 +245,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				if (triangle == (HWND)lParam)
 				{
+					WCHAR sir[10];
+					GetWindowText(chSpeed, sir, 10);
+					speed = _wtoi(sir);
+					if (speed > 10)
+					{
+						MessageBox(NULL, L"Viteza introdusa gresit. Incercati valori din intervalul 1-10", L"eroare", MB_ICONERROR);
+						speed = 0;
+						break;
+					}
+
 					HWND stDiag = CreateDialog(hInst, MAKEINTRESOURCE(IDD_START), hWnd, (DLGPROC)Start);
 					HDC hdc = GetDC(stDiag);
 					option =TRIUNGHI;
@@ -225,6 +262,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				if (hexagon == (HWND)lParam)
 				{
+					WCHAR sir[10];
+					GetWindowText(chSpeed, sir, 10);
+					speed = _wtoi(sir);
+					if (speed > 10)
+					{
+						MessageBox(NULL, L"Viteza introdusa gresit. Incercati valori din intervalul 1-10", L"eroare", MB_ICONERROR);
+						speed = 0;
+						break;
+					}
+
 					HWND stDiag = CreateDialog(hInst, MAKEINTRESOURCE(IDD_START), hWnd, (DLGPROC)Start);
 					HDC hdc = GetDC(stDiag);
 					option = HEXAGON;
@@ -249,9 +296,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
             // TODO: Add any drawing code that uses hdc here...
-		TextOut(hdc, 10, 60, L"Latime Linie:", 13);
-		TextOut(hdc, 10, 85, L"Minim:",6);
-		TextOut(hdc, 10, 110, L"Viteza:", 7);
+		TextOut(hdc, 10, 60, L"Latime:[1-10]", 13);
+		TextOut(hdc, 10, 85, L"Viteza:[1-10]", 13);
             EndPaint(hWnd, &ps);
         }
         break;
@@ -315,9 +361,8 @@ INT_PTR CALLBACK Start(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hDlg, &ps);
 		// TODO: Add any drawing code that uses hdc here...
-		//square(hdc,100,100,200,5);
-		//circle(hdc,0,0,500,10);
-		Draw(hdc,option);
+	
+		Draw(hdc,option,backColor,lineColor,lineWidth,speed);
 		EndPaint(hDlg, &ps);
 	}
 	break;

@@ -7,28 +7,36 @@
 #define CERC 2
 #define TRIUNGHI 3
 #define HEXAGON 4
-void Square(HDC, int, int , int,int);
-void Circle(HDC, int, int, int, int);
-void Triangle(HDC,int,int,int,int,int,int,int);
-void Hexagon(HDC, int, int, int, int, int, int, int);
-void Draw(HDC hdc,int option)
+void Square(HDC, int, int , int,int,int);
+void Circle(HDC, int, int, int, int,int);
+void Triangle(HDC,int,int,int,int,int,int,int,int);
+void Hexagon(HDC, int, int, int, int, int, int, int,int);
+
+void Draw(HDC hdc,int option, COLORREF bkColor, COLORREF borderColor,  int lineWidth, int speed)
 {
+	HPEN pen = CreatePen(PS_SOLID, lineWidth, borderColor);
+	HBRUSH brush = CreateSolidBrush(bkColor);
+
+	SelectObject(hdc, brush);
+	SelectObject(hdc, pen);
+
 	switch (option) {
 	case PATRAT:
-		Square(hdc, 100, 100, 200, 5);
+		Square(hdc, 100, 100, 200, 10,speed);
 		break;
 	case CERC:
-		Circle(hdc, 0, 0, 500, 10);
+		Circle(hdc, 0, 0, 500, 8,speed);
 		break;
 	case TRIUNGHI:
-		Triangle(hdc, 190, 10, 20, 340, 360, 340,8);
+		Triangle(hdc, 190, 10, 20, 340, 360, 340,8,speed);
+		break;
 	case HEXAGON:
-		Hexagon(hdc, 190, 10, 20, 340, 360, 340, 5);
+		Hexagon(hdc, 190, 10, 20, 340, 360, 340,5,speed);
+		break;
 	}
 
 
 }
-
 
 void Intersection(int aX, int aY, int bX, int bY, int mX, int mY, int nX, int nY, int *M, int *N) {
 	int kX = bX - aX;
@@ -45,7 +53,7 @@ void Intersection(int aX, int aY, int bX, int bY, int mX, int mY, int nX, int nY
 	*N = (kY * r2 - r1 * lY) / det;
 }
 
-void Hexagon(HDC hdc, int aX, int aY, int bX, int bY, int cX, int cY, int iter) {
+void Hexagon(HDC hdc, int aX, int aY, int bX, int bY, int cX, int cY, int iter,int speed) {
 	//if (sqrt((bX - aX) * (bX - aX) + (bY - aY) * (bY - aY)) < minDist) 
 	if (iter == 0)
 		return;
@@ -87,41 +95,41 @@ void Hexagon(HDC hdc, int aX, int aY, int bX, int bY, int cX, int cY, int iter) 
 	MoveToEx(hdc, pX, pY, NULL);
 	LineTo(hdc, mX, mY);
 
-	Sleep(10);
+	Sleep(10-speed);
 
-	Hexagon(hdc, aX, aY, ab1X, ab1Y, ac1X, ac1Y, iter - 1);
-	Hexagon(hdc, bX, bY, ab2X, ab2Y, bc1X, bc1Y, iter - 1);
-	Hexagon(hdc, cX, cY, ac2X, ac2Y, bc2X, bc2Y, iter - 1);
+	Hexagon(hdc, aX, aY, ab1X, ab1Y, ac1X, ac1Y, iter - 1,speed);
+	Hexagon(hdc, bX, bY, ab2X, ab2Y, bc1X, bc1Y, iter - 1,speed);
+	Hexagon(hdc, cX, cY, ac2X, ac2Y, bc2X, bc2Y, iter - 1,speed);
 
-	Hexagon(hdc, mX, mY, bc1X, bc1Y, bc2X, bc2Y, iter - 1);
-	Hexagon(hdc, nX, nY, ac1X, ac1Y, ac2X, ac2Y, iter - 1);
-	Hexagon(hdc, pX, pY, ab1X, ab1Y, ab2X, ab2Y, iter - 1);
+	Hexagon(hdc, mX, mY, bc1X, bc1Y, bc2X, bc2Y, iter - 1,speed);
+	Hexagon(hdc, nX, nY, ac1X, ac1Y, ac2X, ac2Y, iter - 1,speed);
+	Hexagon(hdc, pX, pY, ab1X, ab1Y, ab2X, ab2Y, iter - 1,speed);
 }
 
-void Square(HDC hdc,int x,int y,int dist,int minDist)
+void Square(HDC hdc,int x,int y,int dist,int minDist,int speed)
 {
 	if (dist < minDist) return;
-	Square(hdc, x - dist*SFERT, y - dist*SFERT, dist/2, minDist);
-	Square(hdc, x+dist - dist*SFERT, y+dist - dist*SFERT, dist / 2, minDist);
-	Square(hdc, x- dist*SFERT, y + dist - dist*SFERT, dist / 2, minDist);
-	Square(hdc, x + dist - dist*SFERT, y - dist*SFERT, dist / 2, minDist);
-	Sleep(50);
+	Square(hdc, x - dist*SFERT, y - dist*SFERT, dist/2, minDist,speed);
+	Square(hdc, x+dist - dist*SFERT, y+dist - dist*SFERT, dist / 2, minDist,speed);
+	Square(hdc, x- dist*SFERT, y + dist - dist*SFERT, dist / 2, minDist,speed);
+	Square(hdc, x + dist - dist*SFERT, y - dist*SFERT, dist / 2, minDist,speed);
+	Sleep(10 - speed);
 	Rectangle(hdc, x, y, x + dist, y + dist);
 }
 
-void Circle(HDC hdc,int x, int y,int dist,int minDist)
+void Circle(HDC hdc,int x, int y,int dist,int minDist,int speed)
 {
-	Sleep(10);
+	Sleep(10-speed);
 	Ellipse(hdc, x, y, x+dist , y+dist);
 	if (dist < minDist) return;
 
-	Circle(hdc,x + dist / 4, y , dist / 2, minDist);
-	Circle(hdc, x , y + dist / 4, dist / 2, minDist);
-	Circle(hdc, x+dist/4, y + dist/2, dist / 2, minDist);
-	Circle(hdc, x + dist / 2, y + dist / 4, dist / 2, minDist);
+	Circle(hdc,x + dist / 4, y , dist / 2, minDist,speed);
+	Circle(hdc, x , y + dist / 4, dist / 2, minDist,speed);
+	Circle(hdc, x+dist/4, y + dist/2, dist / 2, minDist,speed);
+	Circle(hdc, x + dist / 2, y + dist / 4, dist / 2, minDist,speed);
 }
 
-void Triangle(HDC hdc,int aX,int aY,int bX,int bY,int cX,int cY,int count)
+void Triangle(HDC hdc,int aX,int aY,int bX,int bY,int cX,int cY,int count,int speed)
 {
 	if (count == 0)
 		return;
@@ -140,8 +148,8 @@ void Triangle(HDC hdc,int aX,int aY,int bX,int bY,int cX,int cY,int count)
 	LineTo(hdc, cX, cY);
 	MoveToEx(hdc, aX, aY, NULL);
 	LineTo(hdc, cX, cY);
-	Sleep(10);
-	Triangle(hdc, aX, aY, mX, mY, nX, nY, count - 1);
-	Triangle(hdc, mX, mY, bX, bY, pX, pY, count - 1);
-	Triangle(hdc, nX, nY, pX, pY, cX, cY, count - 1);
+	Sleep(10-speed);
+	Triangle(hdc, aX, aY, mX, mY, nX, nY, count - 1,speed);
+	Triangle(hdc, mX, mY, bX, bY, pX, pY, count - 1,speed);
+	Triangle(hdc, nX, nY, pX, pY, cX, cY, count - 1,speed);
 }
