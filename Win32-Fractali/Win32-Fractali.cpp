@@ -236,7 +236,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						speed = 0;
 						break;
 					}
-
+					GetWindowText(chWidthLine, sir, 10);
+					lineWidth = _wtoi(sir);
+					if (lineWidth > 10)
+					{
+						MessageBox(NULL, L"Latime introdusa gresit. Incercati valori din intervalul 1-10", L"eroare", MB_ICONERROR);
+						lineWidth = 1;
+						break;
+					}
 					HWND stDiag = CreateDialog(hInst, MAKEINTRESOURCE(IDD_START), hWnd, (DLGPROC)Start);
 					HDC hdc = GetDC(stDiag);
 					option = CERC;
@@ -255,6 +262,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						break;
 					}
 
+
+					GetWindowText(chWidthLine, sir, 10);
+					lineWidth = _wtoi(sir);
+					if (lineWidth > 10)
+					{
+						MessageBox(NULL, L"Latime introdusa gresit. Incercati valori din intervalul 1-10", L"eroare", MB_ICONERROR);
+						lineWidth = 1;
+						break;
+					}
+
 					HWND stDiag = CreateDialog(hInst, MAKEINTRESOURCE(IDD_START), hWnd, (DLGPROC)Start);
 					HDC hdc = GetDC(stDiag);
 					option =TRIUNGHI;
@@ -269,6 +286,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					{
 						MessageBox(NULL, L"Viteza introdusa gresit. Incercati valori din intervalul 1-10", L"eroare", MB_ICONERROR);
 						speed = 0;
+						break;
+					}
+
+
+					GetWindowText(chWidthLine, sir, 10);
+					lineWidth = _wtoi(sir);
+					if (lineWidth > 10)
+					{
+						MessageBox(NULL, L"Latime introdusa gresit. Incercati valori din intervalul 1-10", L"eroare", MB_ICONERROR);
+						lineWidth = 1;
 						break;
 					}
 
